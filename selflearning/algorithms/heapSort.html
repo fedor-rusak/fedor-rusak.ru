@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
+
+		<title>heapSort — сортировка кучуй (пирамидальная)</title>
+
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+		<script>
+			"use strict";
+
+			function fillRect(ctx, x,y, width, height, fillStyle) {
+				var oldFillStyle = ctx.fillStyle;
+
+				ctx.fillStyle = fillStyle;
+				ctx.fillRect(x - width/2, y - width/2, width,height);
+				ctx.fillStyle = oldFillStyle;
+			}
+
+			function strokeRect(ctx, x,y, width, height, lineWidth) {
+				var oldLineWidth = ctx.lineWidth;
+
+				ctx.lineWidth = lineWidth || oldLineWidth;
+				ctx.strokeRect(x - width/2, y - width/2, width,height);
+				ctx.lineWidth = oldLineWidth;
+			}
+
+			function fillText(ctx, x, y, text) {
+				ctx.fillText(text, x, y);
+			}
+
+
+			function clear(ctx, width, height) {
+				ctx.clearRect(0,0, width, height);
+			}
+
+			function drawCell(ctx, renderingDetails, cell, i, j, text, color) {
+				var cellX = renderingDetails.startX+i*(renderingDetails.margin+cell.width),
+				    cellY = renderingDetails.startY+j*(renderingDetails.margin+cell.height),
+				    cellWidth = cell.width,
+				    cellHeight = cell.height;
+
+				color = color || "rgba(196,113,6,0.9)";
+				fillRect(ctx, cellX, cellY, cellWidth, cellHeight, color);
+
+				strokeRect(ctx, cellX, cellY, cellWidth, cellHeight, 2);
+
+				ctx.textAlign="center";
+				ctx.textBaseline = 'middle';
+				ctx.font = "26px sans-serif";
+				fillText(ctx, cellX, cellY+1, text);
+			}
+
+			function defineTracingProperty(proxyObject, tag, realObject, actionsArray) {
+				Object.defineProperty(proxyObject, tag, {
+					get: function() {return realObject[tag];},
+					set: function(value) {
+						realObject[tag] = value;
+						actionsArray.push({"tag": tag, "value": value});
+					}
+				});
+			}
+
+
+			function startAnimation(actionsArray, valueData, performAction, render, pauseTime) {
+				var counter = 0;
+
+				function gameLoopCycle() {
+					console.log(actionsArray[counter]);
+
+
+					performAction(actionsArray[counter], valueData);
+
+
+					render(valueData);
+
+
+					counter = counter+1;
+
+					if (counter < actionsArray.length) {
+						setTimeout(
+							gameLoopCycle,
+							pauseTime
+						);
+					}
+				}
+
+				render(valueData);
+
+				setTimeout(gameLoopCycle, pauseTime);
+			}
+
+			function naiveClone(object) {
+				return JSON.parse(JSON.stringify(object));
+			}
+
+
+			function heapSort(dataArray, _) {
+				if (!_) _ = {"i": 1, "j": 0, "temp": 0};
+
+				var swap = function(array, i1, i2) {
+					_.temp = array[i1];
+					array[i1] = array[i2];
+					array[i2] = _.temp;
+				}
+
+				var bubbleDown = function(array, length) {
+					_.j = 0;
+
+					while (true) {
+						var rootPosition = _.j,
+						    leftPosition = rootPosition*2+1,
+						    rightPosition = rootPosition*2+2,
+						    maxLeafPosition = leftPosition;
+
+						if (leftPosition > length-1) break;
+
+						if (rightPosition < length-1) {
+							if (array[leftPosition] < array[rightPosition])
+								maxLeafPosition = rightPosition;
+						}
+
+						if (array[rootPosition] < array[maxLeafPosition]) {
+							swap(array, rootPosition, maxLeafPosition);
+							_.j = maxLeafPosition;
+						}
+						else
+							break;
+					}
+				}
+
+				var bubbleUp = function(array, length, startPosition) {
+					for (_.j = startPosition; _.j > 0; _.j = Math.floor((_.j-1)/2)) {
+						var check = true,
+						    leafPosition = _.j,
+						    rootPosition = Math.floor((_.j-1)/2);
+
+						if (array[rootPosition] < array[leafPosition]) {
+							swap(array, rootPosition, leafPosition);
+							check = false;
+						}
+
+						if (check) break;
+					}
+				}
+
+				for (; _.i < dataArray.length; _.i++)
+					bubbleUp(dataArray, _.i+1, _.i);
+
+
+				for (_.i = dataArray.length-1; _.i > 0; _.i--) {
+					swap(dataArray, 0, _.i);
+
+					bubbleDown(dataArray, _.i);
+				}
+			}
+
+			window.onload = function() {
+				var canvas = document.querySelector("#visualization");
+				var width = canvas.width,
+				    height = canvas.height;
+				var ctx = document.querySelector("#visualization").getContext('2d');
+
+				var cell = {width: 40, height: 40};
+
+				var renderingDetails = {startX: cell.width, startY: height/2, margin: 10};
+
+				var bindedDrawCell = drawCell.bind(null, ctx, renderingDetails, cell);
+
+
+				//tracing data
+				var traceArray = [];
+
+
+				//generate array proxy
+				var dataArray = [5,2,3,4,4,0,4,5,2,0,9,0];
+				var clonedDataArray = naiveClone(dataArray);
+
+				var arrayProxy = {};
+				for (var i = 0; i < dataArray.length; i++)
+					defineTracingProperty(arrayProxy, i, dataArray, traceArray);
+
+				defineTracingProperty(arrayProxy, "length", dataArray, traceArray);
+
+				//generate temp_data proxy
+				var tempData = {"i": 1, "j": 0, "temp": undefined};
+				var clonedTempData = naiveClone(tempData);
+
+				var tempDataProxy = {};
+				defineTracingProperty(tempDataProxy, "i", tempData, traceArray);
+				defineTracingProperty(tempDataProxy, "j", tempData, traceArray);
+				defineTracingProperty(tempDataProxy, "temp", tempData, traceArray);
+
+
+				//perform sorting
+				heapSort(arrayProxy, tempDataProxy);
+
+				//test
+				for (var i = 0; i < dataArray.length-2; i++)
+					if (dataArray[i] > dataArray[i+1]) alert(dataArray[i] + " " + dataArray[i+1]);
+
+
+				var renderArray = function(valueData) {
+					clear(ctx, width, height);
+
+
+					var array = valueData.array;
+
+					for (var i = 0; i < array.length; i++)
+						bindedDrawCell(i+1,-4, array[i]);
+
+
+					var tempData = valueData.tempData;
+
+					bindedDrawCell(tempData.i+1, -5, tempData.i, "rgba(232,179,47,0.9)");
+					bindedDrawCell(tempData.j+1, -3, tempData.j, "rgba(135,109,20,0.9)");
+
+
+					if (tempData.temp != undefined)
+						bindedDrawCell(tempData.j, -3, tempData.temp);
+
+					if (valueData.renderingState) {
+						var pyramidLength = valueData.renderingState.pyramidLength;
+						for (var i = 0; i <= pyramidLength && i < array.length; i++) {
+							if (i == 0)
+								bindedDrawCell(6, 0, array[i]);
+							else if (i < 3)
+								bindedDrawCell(0+i*4, 1, array[i]);
+							else if (i < 7)
+								bindedDrawCell(-3+i*2, 2, array[i]);
+							else if (i < 15) {
+								var delta = (i - 7);
+								delta = 2.5 + 2*Math.floor(delta/2) + 1*(delta % 2);
+								bindedDrawCell(delta, 3, array[i]);
+							}
+						}
+					}
+				};
+
+
+				var performAction = function() {
+					var state = {"pyramidLength": 1, direction: "up"};
+
+					return function(action, valueData) {
+						var tempData = valueData.tempData;
+
+						if (state.temp != undefined) {
+							tempData.temp = undefined;
+							state.temp = undefined;
+						}
+						else if (tempData.temp != undefined) {
+							state.temp = true;
+						}
+
+						if (action.tag === "i" || action.tag === "j" || action.tag === "temp")
+							tempData[action.tag] = action.value;
+						else
+							valueData.array[action.tag] = action.value;
+
+						if (state.pyramidLength < tempData.i && state.direction === "up") {
+							state.pyramidLength = tempData.i;
+						}
+						else if (state.direction === "down") {
+							state.pyramidLength = tempData.i-1;
+						}
+						else if (tempData.i < state.pyramidLength) {
+							state.direction = "down";
+						}
+
+
+						valueData.renderingState = {"pyramidLength": state.pyramidLength};
+					};
+				}();
+
+				var inputData = {"array": clonedDataArray, "tempData": clonedTempData};
+				startAnimation(traceArray, inputData, performAction, renderArray, 400);
+			};
+		</script>
+	</head>
+
+	<body>
+		<div style="width: 720px; height: 600px; position: absolute; margin: auto; left: 0; right: 0; top: 0; bottom: 0; padding: 40px; background-color: #EEE" id="main">
+			<canvas id="visualization"  width="720" height="680"><canvas/>
+		</div>
+	</body>
+</html>

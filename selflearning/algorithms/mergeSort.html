@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
+
+		<title>mergeSort — сортировка слиянием</title>
+
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+		<script>
+			"use strict";
+
+			function fillRect(ctx, x,y, width, height, fillStyle) {
+				var oldFillStyle = ctx.fillStyle;
+
+				ctx.fillStyle = fillStyle;
+				ctx.fillRect(x - width/2, y - width/2, width,height);
+				ctx.fillStyle = oldFillStyle;
+			}
+
+			function strokeRect(ctx, x,y, width, height, lineWidth) {
+				var oldLineWidth = ctx.lineWidth;
+
+				ctx.lineWidth = lineWidth || oldLineWidth;
+				ctx.strokeRect(x - width/2, y - width/2, width,height);
+				ctx.lineWidth = oldLineWidth;
+			}
+
+			function fillText(ctx, x, y, text) {
+				ctx.fillText(text, x, y);
+			}
+
+
+			function clear(ctx, width, height) {
+				ctx.clearRect(0,0, width, height);
+			}
+
+			function drawCell(ctx, renderingDetails, cell, i, j, text, color) {
+				var cellX = renderingDetails.startX+i*(renderingDetails.margin+cell.width),
+				    cellY = renderingDetails.startY+j*(renderingDetails.margin+cell.height),
+				    cellWidth = cell.width,
+				    cellHeight = cell.height;
+
+				color = color || "rgba(196,113,6,0.9)";
+				fillRect(ctx, cellX, cellY, cellWidth, cellHeight, color);
+
+				strokeRect(ctx, cellX, cellY, cellWidth, cellHeight, 2);
+
+				ctx.textAlign="center";
+				ctx.textBaseline = 'middle';
+				ctx.font = "26px sans-serif";
+				fillText(ctx, cellX, cellY+1, text);
+			}
+
+			function defineTracingProperty(proxyObject, tag, realObject, actionsArray) {
+				Object.defineProperty(proxyObject, tag, {
+					get: function() {return realObject[tag];},
+					set: function(value) {
+						realObject[tag] = value;
+						actionsArray.push({"tag": tag, "value": value});
+					}
+				});
+			}
+
+
+			function startAnimation(actionsArray, valueData, performAction, render, pauseTime) {
+				var counter = 0;
+
+				function gameLoopCycle() {
+					console.log(actionsArray[counter]);
+
+
+					performAction(actionsArray[counter], valueData);
+
+
+					render(valueData);
+
+
+					counter = counter+1;
+
+					if (counter < actionsArray.length) {
+						setTimeout(
+							gameLoopCycle,
+							pauseTime
+						);
+					}
+				}
+
+				render(valueData);
+
+				setTimeout(gameLoopCycle, pauseTime);
+			}
+
+			function naiveClone(object) {
+				return JSON.parse(JSON.stringify(object));
+			}
+
+
+			function mergeSort(dataArray, _) {
+				if (!_) _ = {"i": 1, "j": 0, "temp": 0};
+
+				var swap = function(array, i1, i2) {
+					_.temp = array[i1];
+					array[i1] = array[i2];
+					array[i2] = _.temp;
+				}
+
+				var bufVal1 = [], bufVal2 = [];
+				bufVal1.length = Math.floor(dataArray.length/2)+1;
+				bufVal2.length = bufVal1.length;
+
+				var getSubArray = function(bufVal, array, from, to) {
+					bufVal["counter"] = 0;
+
+					for (var i = from; i <= to; i++) {
+						bufVal[i-from] = array[i];
+						array[i] = " ";
+					}
+
+					return bufVal;
+				}
+
+				var merge = function(array, low, middle, high) {
+					_.j = middle;
+
+					var buf1 = getSubArray(bufVal1, array, low, middle),
+						buf2 = getSubArray(bufVal2, array, middle+1, high);
+
+
+					_.i = low;
+					while (buf1.counter <= (middle-low) && buf2.counter <= (high-middle-1)) {
+						var bufToShift;
+
+						if (buf1[buf1.counter] < buf2[buf2.counter])
+							bufToShift = buf1;
+						else
+							bufToShift = buf2;
+
+						array[_.i] = bufToShift[bufToShift.counter];
+						bufToShift.counter++;
+						_.i++;
+					}
+
+					while(buf1.counter <= (middle-low)) {
+						array[_.i] = buf1[buf1.counter];
+						buf1.counter++;
+						_.i++;
+					}
+
+					while(buf2.counter <= (high-middle-1)) {
+						array[_.i] = buf2[buf2.counter];
+						buf2.counter++;
+						_.i++;
+					}
+				}
+
+				var mergeSortFunc = function(array, low, high) {
+					if (low < high) {
+						var middle = Math.floor((low+high)/2);
+
+						mergeSortFunc(array, low, middle);
+						mergeSortFunc(array, middle+1, high);
+
+						merge(array, low, middle, high);
+					}
+				}
+
+				mergeSortFunc(dataArray, 0, dataArray.length-1);
+			}
+
+			window.onload = function() {
+				var canvas = document.querySelector("#visualization");
+				var width = canvas.width,
+				    height = canvas.height;
+				var ctx = document.querySelector("#visualization").getContext('2d');
+
+				var cell = {width: 40, height: 40};
+
+				var renderingDetails = {startX: cell.width, startY: height/2, margin: 10};
+
+				var bindedDrawCell = drawCell.bind(null, ctx, renderingDetails, cell);
+
+
+				//tracing data
+				var traceArray = [];
+
+
+				//generate array proxy
+				var dataArray = [5,2,3,4,4,0,4,5,2,0,9,0];
+				var clonedDataArray = naiveClone(dataArray);
+
+				var arrayProxy = {};
+				for (var i = 0; i < dataArray.length; i++)
+					defineTracingProperty(arrayProxy, i, dataArray, traceArray);
+
+				defineTracingProperty(arrayProxy, "length", dataArray, traceArray);
+
+				//generate temp_data proxy
+				var tempData = {"i": 1, "j": 0, "temp": undefined};
+				var clonedTempData = naiveClone(tempData);
+
+				var tempDataProxy = {};
+				defineTracingProperty(tempDataProxy, "i", tempData, traceArray);
+				defineTracingProperty(tempDataProxy, "j", tempData, traceArray);
+				defineTracingProperty(tempDataProxy, "temp", tempData, traceArray);
+
+
+				//perform sorting
+				mergeSort(arrayProxy, tempDataProxy);
+
+				//test
+				for (var i = 0; i < dataArray.length-2; i++)
+					if (dataArray[i] > dataArray[i+1]) alert(dataArray[i] + " " + dataArray[i+1]);
+
+
+				var renderArray = function(valueData) {
+					clear(ctx, width, height);
+
+
+					var array = valueData.array;
+
+					for (var i = 0; i < array.length; i++)
+						bindedDrawCell(i+1, 0, array[i]);
+
+
+					var tempData = valueData.tempData;
+
+					bindedDrawCell(tempData.i+1,-1, tempData.i, "rgba(232,179,47,0.9)");
+					bindedDrawCell(tempData.j+1, 1, tempData.j, "rgba(135,109,20,0.9)");
+
+
+					if (tempData.temp != undefined)
+						bindedDrawCell(tempData.j, 1, tempData.temp);
+				};
+
+
+				var performAction = function() {
+					var state = {};
+
+					return function(action, valueData) {
+						var tempData = valueData.tempData;
+
+						if (state.temp != undefined) {
+							tempData.temp = undefined;
+							state.temp = undefined;
+						}
+						else if (tempData.temp != undefined) {
+							state.temp = true;
+						}
+
+						if (action.tag === "i" || action.tag === "j" || action.tag === "temp")
+							tempData[action.tag] = action.value;
+						else
+							valueData.array[action.tag] = action.value;
+					};
+				}();
+
+				var inputData = {"array": clonedDataArray, "tempData": clonedTempData};
+				startAnimation(traceArray, inputData, performAction, renderArray, 400);
+			};
+		</script>
+	</head>
+
+	<body>
+		<div style="width: 720px; height: 600px; position: absolute; margin: auto; left: 0; right: 0; top: 0; bottom: 0; padding: 40px; background-color: #EEE" id="main">
+			<canvas id="visualization"  width="720" height="680"><canvas/>
+		</div>
+	</body>
+</html>

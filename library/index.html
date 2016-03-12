@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+		<!-- Basic Page Needs
+		–––––––––––––––––––––––––––––––––––––––––––––––––– -->
+		<meta charset="utf-8">
+		<title>Библиотека</title>
+		<meta name="description" content="">
+		<meta name="author" content="">
+
+		<!-- Mobile Specific Metas
+		–––––––––––––––––––––––––––––––––––––––––––––––––– -->
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+		<!-- FONT
+		–––––––––––––––––––––––––––––––––––––––––––––––––– -->
+		<link href="/resources/font.css" rel="stylesheet" type="text/css">
+
+		<!-- CSS
+		–––––––––––––––––––––––––––––––––––––––––––––––––– -->
+		<link rel="stylesheet" href="/resources/normalize.css">
+		<link rel="stylesheet" href="/resources/skeleton.css">
+		<link rel="stylesheet" href="/resources/custom.css">
+		<style>
+			input, button {
+				font-family: "OpenSans","HelveticaNeue","Helvetica Neue",Helvetica,Arial,sans-serif;
+			}
+			.bookshelf {
+				margin: 0;
+			}
+			.bookshelf > li {
+				margin: 0;
+			}
+			.book-spine {
+				font-family: Tahoma, Geneva, sans-serif;
+				display: block;
+				list-style-type: none;
+				padding: 30px;
+				font-size: 25px;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+				box-shadow: inset 0px 8px 18px -8px rgba(0,0,0,0.25), inset 0px -8px 18px -8px rgba(255,255,255,0.25);
+				text-shadow: 0px 0px 5px lightgrey;
+				color: #222;
+				text-decoration: none;
+				text-align: left;
+			}
+			.book-spine:hover {
+				text-shadow: 0px 0px 5px white;
+				color: #22a;
+			}
+			.technology-color {
+				background-color: #ffffff;
+			}
+			.programming-color {
+				background-color: lightblue;
+			}
+			.science-color {
+				background-color: #c6d166;
+			}
+			@media (min-width: 750px) {
+				.book-spine {
+					font-size: 40px;
+				}
+			}
+			@media (min-width: 550px) {
+				.book-spine {
+					font-size: 30px;
+				}
+			}
+		</style>
+    <script>
+	"use strict";
+
+	function makeRequest(method, url) {
+		return new Promise(function (resolve, reject) {
+			var xhr = new XMLHttpRequest();
+			xhr.open(method, url);
+			xhr.onload = function () {
+				if (this.status == 200)
+					resolve(xhr.response);
+				else
+					reject({"status": this.status, "statusText": xhr.statusText});
+			};
+			xhr.onerror = function () {
+				reject({"status": this.status, "statusText": xhr.statusText});
+			};
+			xhr.send();
+		});
+	}
+
+	function clearChildNodes(element) {
+		while (element.firstChild)
+			element.removeChild(element.firstChild);
+	}
+
+	function showArticleData(data) {
+	  	var divArticle = document.querySelector("#article");
+		clearChildNodes(divArticle);
+
+		var newHTML = document.createElement("html");
+		newHTML.innerHTML = data;
+		var newBody = newHTML.querySelector("body");
+
+		for (var i = 0; i < newBody.children.length;) {
+			divArticle.appendChild(newBody.children[i]);
+		}
+
+		document.title = newHTML.querySelector("title").innerHTML;
+
+		divArticle.style.display = "inline";
+		document.querySelector("#search").style.display = "none";
+	}
+
+	function showBooks(data, searchQuery) {
+		var bookArray = JSON.parse(data);
+
+		var searchWordArray = undefined;
+		if (searchQuery) {
+			document.querySelector("#searchQuery").value = searchQuery;
+			searchWordArray = searchQuery.replace(/\s\s+/g, ' ').trim().toLowerCase().split(" ");
+		}
+
+		var listElement = document.querySelector("#list");
+
+		clearChildNodes(listElement);
+
+		for (var i = 0; i < bookArray.length; i++) {
+			var book = bookArray[i];
+			var content = "<b>"+book.title+"</b> <font face=\"Courier New, Courier, monospace\">("+book.year_of_publish+") "+book.authors+"</font>";
+			if (searchWordArray) {
+				var dontShow = true;
+				var bookSearchContent = content.toLowerCase();
+
+				for (var j = 0; j < searchWordArray.length; j++) {
+					if (bookSearchContent.indexOf(searchWordArray[j]) != - 1) {
+						dontShow = false;
+						break;
+					}
+				}
+				if (dontShow) continue;
+			}
+
+			var li = document.createElement("li");
+			var aLink = document.createElement("a");
+			li.appendChild(aLink);
+			aLink.className = "book-spine "+book.category+"-color";
+			aLink.href = book.href;
+			aLink.style.cssText = "background-image: url(\"images/"+bookArray[i].texture+"\");";
+			aLink.innerHTML = content;
+
+			listElement.appendChild(li);
+		}
+
+		document.title = "Библиотека";
+
+		document.querySelector("#search").style.display = "block";
+		document.querySelector("#article").style.display = "none";
+	}
+
+
+	function eventedPushState(url) {
+		history.pushState(null, null, url);
+		window.dispatchEvent(new Event("pushState"));
+	}
+
+	var global = {data: null};
+
+	function sideEffectedShowBooks(searchQuery) {
+		if (global.data === null)
+			makeRequest("GET", "library_data.json?"+Date.now()).then(function(data) {global.data = data; showBooks(data, searchQuery);});
+		else 
+			showBooks(global.data, searchQuery);
+	}
+
+	window.onpopstate = function(event, showSearchPage) {
+		if (window.location.search === "" || showSearchPage)
+			sideEffectedShowBooks();
+		else
+        		window.dispatchEvent(new Event("pushState"));
+	};
+
+	window.addEventListener(
+		"pushState",
+ 		function(event) {
+			var searchString = window.location.search;
+
+			if (searchString.substring(1,5) === "show") {
+				var query = searchString.substring(6);
+				makeRequest("GET", query)
+					.then(showArticleData)
+					.catch(function(data) {alert("Эта книга недоступна");window.onpopstate(null, "showSearchPage");});
+			}
+			else if (searchString.substring(1,7) === "search") {
+				var searchQuery = searchString.substring(8);
+				sideEffectedShowBooks(decodeURI(searchQuery));
+			}
+			else {
+				window.onpopstate(null, "showSearchPage");
+			}
+		}
+	);
+
+	window.onload = function() {
+		document.querySelector("#list").addEventListener(
+			"click",
+			function(e) {
+				if (e.target && e.target.nodeName == "A")
+					eventedPushState("?show="+e.target.getAttribute("href"));
+				else if (e.target && e.target.parentNode.nodeName == "A")
+					eventedPushState("?show="+e.target.parentNode.getAttribute("href"));
+
+				e.preventDefault();
+			}
+		);
+
+		window.onpopstate();
+
+		document.querySelector("#searchButton").onclick = function() {
+			var searchQuery = document.querySelector("#searchQuery").value;
+			eventedPushState("?search="+encodeURI(searchQuery));
+			return false;
+		};
+	};
+    </script>
+	</head>
+	<body>
+
+		<div class="container" id="search" style="display: none;">
+			<div style="margin-top: 30px;">
+				<form style="margin-bottom: 0px;" action="index.html" method="get">
+					<div class="row" style="text-align: center;" >
+						<input id="searchQuery" class="u-full-width" placeholder="Слова для поиска" type="text">
+						<input id="searchButton" class="button-primary" value="искать" type="submit" style="margin-top:10px;">
+					</div>
+				</form>
+			</div>
+
+			<div style="margin-top: 30px">
+				<div class="row" style="text-align: center;">
+					<ul class="bookshelf" style="list-style: none;" id="list">
+						<li><a style="background-image: url(&quot;images/beige-paper.png&quot;);" href="the-victorian-internet.html" class="book-spine technology-color"><b>The Victorian Internet</b> <font face="Courier New, Courier, monospace">(1998) Tom Standage</font></a></li>
+						<li><a style="background-image: url(&quot;images/tile-3px.png&quot;);" href="game-programming-patterns.html" class="book-spine programming-color"><b>Game Programming Patterns</b> <font face="Courier New, Courier, monospace">(2014) Robert Nystrom</font></a></li>
+						<li><a style="background-image: url(&quot;images/bedge-grunge.png&quot;);" href="effective-java-2nd-edition.html" class="book-spine programming-color"><b>Effective Java (2nd Edition)</b> <font face="Courier New, Courier, monospace">(2008) Joshua Bloch</font></a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div id="article">
+		</div>
+	</body>
+</html>

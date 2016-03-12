@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ru">
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+		<!-- Basic Page Needs
+		–––––––––––––––––––––––––––––––––––––––––––––––––– -->
+		<meta charset="utf-8">
+		<title>Самообучение</title>
+		<meta name="description" content="">
+		<meta name="author" content="">
+
+		<!-- Mobile Specific Metas
+		–––––––––––––––––––––––––––––––––––––––––––––––––– -->
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+		<!-- FONT
+		–––––––––––––––––––––––––––––––––––––––––––––––––– -->
+		<link href="/resources/font.css" rel="stylesheet" type="text/css">
+
+		<!-- CSS
+		–––––––––––––––––––––––––––––––––––––––––––––––––– -->
+		<link rel="stylesheet" href="/resources/normalize.css">
+		<link rel="stylesheet" href="/resources/skeleton.css">
+		<link rel="stylesheet" href="/resources/custom.css">
+
+		<!-- Favicon
+		–––––––––––––––––––––––––––––––––––––––––––––––––– -->
+		<link rel="icon" type="image/png" href="resources/favicon.ico">
+
+		<script src="/hyphenator.js" type="text/javascript"></script>
+	</head>
+
+	<body>
+
+		<div class="container hyphenate" style="text-align: justify">
+			<section class="header donthyphenate">
+			  <h2 class="title">Самообучение</h2>
+			  <div class="value-props row" />
+			</section>
+
+			<div class="navbar-spacer"></div>
+			<nav class="navbar">
+				<div class="container">
+					<ul class="navbar-list">
+						<li class="navbar-item"><a class="navbar-link" href="#sorting">Алгоритмы сортировки</a></li>
+						<li class="navbar-item"><a class="navbar-link" href="#monads">Монады</a></li>
+					</ul>
+				</div>
+			</nav>
+
+			<div class="docs-section" id="sorting">
+				<h6 class="docs-header">Алгоритмы сортировки</h6>
+				<p>Часто в требованиях к вакансиям для программистов можно увидеть - знание классических алгоритмов и структур данных. В процессе изучения этого вопроса я наткнулся на чудесную книгу Скиены. Предложенные им алгоритмы сортировки я реализовал на Javascript и для развлечения сделал их анимированное выполнение. Рассмотреные мною варианты:</p>
+				<ul>
+					<li><a href="algorithms/insertionSort.html">сортировка вставками</a></li>
+					<li><a href="algorithms/mergeSort.html">сортировка слиянием</a></li>
+					<li><a href="algorithms/heapSort.html">пирамидальная сортировка</a></li>
+					<li><a href="algorithms/quickSort.html">быстрая сортировка</a></li>
+				</ul>
+				<p>Был приятно удивлен простотой алгоритмов и их реализации. И неприятно удивлён тем как скучно их принято объяснять.</p>
+			</div>
+
+			<div class="docs-section" id="monads">
+				<h6 class="docs-header">Монады</h6>
+				<p>Я давно с большим любопытством пробую разные языки программирования. Так я наткнулся на интеллектуальное мучение под названием Haskell. Язык который требует большого терпения и упорности просто чтобы начать верить в то, что это не колдовство.</p>
+				<p>Функциональный язык программы на котором создаются из чистых функций. А всякие "сайд-эффекты" спрятаны за термином  — Монады. Вот перечень любопытных материалов:</p>
+				<ul>
+					<li><a href="https://blog.jcoglan.com/2011/03/05/translation-from-haskell-to-javascript-of-selected-portions-of-the-best-introduction-to-monads-ive-ever-read/">Статья-руководство. Автор James Coglan.</a></li>
+					<li><a href="http://stackoverflow.com/questions/28139259/why-do-we-need-monads">Вопрос на StackOverflow.com</a></li>
+					<li><a href="https://www.haskell.org/tutorial/monads.html">Статья-руководство. Официальный сайт Haskell.</a></li>
+				</ul>
+				<p>Получается что это некий паттерн проектирования для вычислений состоящих из чистых функций, который сильно повязан на типы данных.</p>
+			</div>
+		</div>
+	</body>
+</html>

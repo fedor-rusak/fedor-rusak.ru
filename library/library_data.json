@@ -1,0 +1,42 @@
+[
+	{
+		"title": "The Victorian Internet",
+		"year_of_publish": 1998,
+		"authors": "Tom Standage",
+		"category": "technology",
+		"texture": "beige-paper.png",
+		"href": "the-victorian-internet.html"
+	},
+	{
+		"title": "Game Programming Patterns",
+		"year_of_publish": 2014,
+		"authors": "Robert Nystrom",
+		"category": "programming",
+		"texture": "tile-3px.png",
+		"href": "game-programming-patterns.html"
+	},
+	{
+		"title": "Effective Java (2nd Edition)",
+		"year_of_publish": 2008,
+		"authors": "Joshua Bloch",
+		"category": "programming",
+		"texture": "bedge-grunge.png",
+		"href": "effective-java-2nd-edition.html"
+	},
+	{
+		"title": "Discovering statistics using R",
+		"year_of_publish": 2012,
+		"authors": "Andy Field, Jeremy Miles, Zoe Field",
+		"category": "science",
+		"texture": "black-linen.png",
+		"href": "discovering-statistics-using-r.html"
+	},
+	{
+		"title": "The Software Craftsman Professionalism, Pragmatism, Pride",
+		"year_of_publish": 2014,
+		"authors": "Sandro Mancuso",
+		"category": "programming",
+		"texture": "carbon-fibre.png",
+		"href": "the-software-craftsman-professionalism-pragmatism-pride.html"
+	}
+]
