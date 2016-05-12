@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ru">
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+		<meta charset="utf-8">
+		<title>Метафоры в разработке программ</title>
+		<meta name="description" content="">
+		<meta name="author" content="">
+
+		<!-- Mobile Specific Metas
+		–––––––––––––––––––––––––––––––––––––––––––––––––– -->
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+		<link href="../resources/font.css" rel="stylesheet" type="text/css">
+
+		<link rel="stylesheet" href="../resources/normalize.css">
+		<link rel="stylesheet" href="../resources/skeleton.css">
+		<link rel="stylesheet" href="../resources/custom.css">
+
+		<link rel="icon" type="image/png" href="../resources/favicon.ico">
+
+		<style>
+			.docs-section {
+				padding-top: 30px;
+				padding-bottom: 30px;
+				font-size: 1.8rem;
+			}
+			.docs-header {
+				font-size: 2.1rem;
+			}
+		</style>
+
+		<script>
+			"use strict";
+
+			var xhrGet = function(url, callback) {
+				var xhr = new XMLHttpRequest();
+				xhr.open("GET", url);
+				xhr.onload = function () {
+					if (this.status == 200)
+						callback(xhr.response);
+				};
+				xhr.send();
+			}
+
+			var hyphenate = function() {
+				var script = document.createElement("script");
+				script.src = "../hyphenator.js";
+				document.head.appendChild(script);
+			};
+
+			function makeRequest(method, url) {
+				return new Promise(function (resolve, reject) {
+					var xhr = new XMLHttpRequest();
+					xhr.open(method, url);
+					xhr.onload = function () {
+						if (this.status == 200)
+							resolve(xhr.response);
+						else
+							reject({"status": this.status, "statusText": xhr.statusText});
+					};
+					xhr.onerror = function () {
+						reject({"status": this.status, "statusText": xhr.statusText});
+					};
+					xhr.send();
+				});
+			}
+
+			function makeChapterRequest(method, url) {
+				return new Promise(function (resolve, reject) {
+					var xhr = new XMLHttpRequest();
+					xhr.open(method, url);
+					xhr.onload = function () {
+						if (this.status == 200)
+							resolve({"url": url, "data":xhr.response});
+						else
+							reject({"status": this.status, "statusText": xhr.statusText});
+					};
+					xhr.onerror = function () {
+						reject({"status": this.status, "statusText": xhr.statusText});
+					};
+					xhr.send();
+				});
+			}
+
+			window.onload = function() {
+				var contentDownloader = function(data) {
+					var chapterArray = JSON.parse(data);
+
+					var requestArray = [];
+
+					for (var i = 0; i < chapterArray.length; i++) {
+						requestArray.push(makeChapterRequest("GET", "data/"+chapterArray[i]));
+					}
+
+					return Promise.all(requestArray);
+				};
+
+				var contentRenderer = function(dataArray) {
+					var book = document.querySelector("#book");
+
+					for (var i = 0; i < dataArray.length; i++) {
+						var chapter = document.createElement("div");
+						chapter.className = "docs-section";
+
+						var chapterHeader = document.createElement("h6");
+						chapterHeader.className="docs-header hyphenate";
+						chapterHeader.innerHTML = dataArray[i].url.substring(5, dataArray[i].url.length-4);
+						chapter.appendChild(chapterHeader);
+
+						var sectionArray = dataArray[i].data.split(/\n/);
+						for (var j = 0; j < sectionArray.length; j++) {
+							chapter.innerHTML += "<p>"+sectionArray[j]+"</p>";
+						}
+
+						book.appendChild(chapter);
+					}
+
+					hyphenate();
+				};
+
+				makeRequest("GET", "data/content.json")
+					.then(contentDownloader)
+					.then(contentRenderer)
+					.catch(function(data) {alert("Что-то сломалось.");});
+			}
+		</script>
+	</head>
+
+	<body class="code-snippets-visible hyphenate" style="text-align: justify;">
+		<div class="container" id="book">
+			<section class="header donthyphenate" style="margin-top: 140px; margin-bottom: 140px;">
+				<h2 class="title">Метафоры в разработке программ</h2>
+			</section>
+
+			<div class="navbar-spacer"></div>
+		</div>
+	</body>
+</html>
