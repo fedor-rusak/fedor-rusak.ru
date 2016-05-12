@@ -53,7 +53,7 @@
 			function makeRequest(method, url) {
 				return new Promise(function (resolve, reject) {
 					var xhr = new XMLHttpRequest();
-					xhr.open(method, url);
+					xhr.open(method, url+"?"+Date.now());
 					xhr.onload = function () {
 						if (this.status == 200)
 							resolve(xhr.response);
@@ -70,7 +70,7 @@
 			function makeChapterRequest(method, url) {
 				return new Promise(function (resolve, reject) {
 					var xhr = new XMLHttpRequest();
-					xhr.open(method, url);
+					xhr.open(method, url+"?"+Date.now());
 					xhr.onload = function () {
 						if (this.status == 200)
 							resolve({"url": url, "data":xhr.response});
