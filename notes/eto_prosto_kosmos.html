@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html class=" " lang="ru">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+		<title>Веб-проект для души | Это просто космос!</title>
+		<meta name="description" content="">
+
+		<meta name="HandheldFriendly" content="True">
+		<meta name="MobileOptimized" content="320">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<link rel="shortcut icon" href="resources/favicon.ico">
+
+		<link rel="stylesheet" type="text/css" href="resources/normalize.css">
+		<link rel="stylesheet" type="text/css" href="resources/nprogress.css">
+		<link rel="stylesheet" type="text/css" href="resources/style.css">
+		<link rel="stylesheet" type="text/css" href="resources/css.css">
+		<link rel="stylesheet" type="text/css" href="resources/font-awesome.css">
+
+		<script type="text/javascript" src="resources/hyphenator.js"></script>
+	</head>
+
+	<body class="home-template">
+
+		<div id="wrapper">
+			<header class="site-header">
+				<div class="container">
+					<div class="site-title-wrapper">
+						<h1 class="site-title">
+							<a class="js-ajax-link" title="К последней записке" href="latest.html">Веб-проект для души</a>
+						</h1>
+						<a class="button-square js-ajax-link js-show-index" title="Содержание" href="content.html"><i class="fa fa-bars"></i></a>
+					</div>
+				</div>
+			</header>
+		
+			<div id="ajax-container" style="display: block;">
+				
+			<div id="latest-post" class="container" style="display: block;">
+			<article class="post-container post">
+				<header class="post-header">
+					<h1 class="post-title donthyphenate">Это просто космос!</h1>
+
+					<p class="post-date"><time datetime="Thu Dec 03 2015 14:08:58 GMT+0300 (MSK)">03.12.2015</time></p>
+				</header>
+
+				<div class="post-content clearfix hyphenate" style="text-align: justify">
+					<p>Выбраная мною блоговая платформа является не только платным сервисом, но и проектом с открытым исходным кодом! То есть любой желающий может взять и разметисть их код на своих серверных мощностях. А если понадобится внести какие-то изменения, то не надо никого просить - бери и делай!</p>
+
+					<p>Конечно это легче сказать чем сделать, ведь для веб-проекта нужен сервер стабильно подключенный к сети интернет. Этот сервер должен быть доступен не по абракадабра (12.123.84.1) адресу, а по красивому текстовому доменному имени в зоне RU. Он должен работать 24 часа в сутки, 365 дней в году. И не очень хочется размещать его дома.</p>
+
+					<p>Все это на сегодняшний день решается за считаные часы. Оплату можно произвести банковской картой или через PayPal. Обновление сопутствующих DNS-серверов заняло у меня меньше суток. И вот мой сервер под управлением Linux уже доступен в интернете и выдает какую-то базовую страничку с информацией о веб-сервере.</p>
+
+					<p>Доставляем встроеным средствами пару нужных пакетов, выключаем ненужные сервисы. И вот после установки мы решаем зарегистрировать владельца в нашем блоге... Погоди, если у меня есть красивый адрес, то почему у меня нет красивой почты который ссылается на этот домен?</p>
+
+					<p>А давай-ка подымем свой почтовый сервер! Это включает в себя настройку специального агента для передачи почтового трафика (TMA), а чтобы можно было почтовым клиентом подключиться надо установить агента доставки почты (DMA). И если не торопиться, и правильно сконфигурировать систему аутентификации пользователей. То теперь у всех пользователей зарегистрированых на сервере будет почта!</p>
+
+					<p>Но погодите регистрировать своего владельца в вашем свежем блоге. Пускай это не так важно сейчас, но в текущем виде логин и пароль будут передаваться открытым текстом по сети. И если кто-то захочет вам все испортить, то вы пока особо этому не препятствовали. Зашли в кафешке через незащищенный вай-фай и какой-нибудь умелец спокойно прочтет эти данные. Исправим?</p>
+
+					<p>То что нам надо это шифрование, а для веб-проектов это SSL. Если у вас ключи от официальной коммерческой компании, то все браузеры удостоверят это пользователям с помощью иконки зеленого замочка. Выпуск таких ключей может занимать до суток, но когда все настроено и установлено, наконец регистрируемся и безопасно пользуемся нашим блогом!</p>
+				</div>
+
+				<footer class="post-footer clearfix">
+				</footer>
+			</article>
+			</div>
+
+		</div>
+	</div>
+
+		<footer class="footer">
+			<div class="container">
+				<div class="site-title-wrapper">
+					<h1 class="site-title" style="height:30px; overflow:hidden;">
+						<a class="js-ajax-link" title="К последней записке" href="latest.html">Веб-проект для души</a>
+					</h1>
+					<h1 class="site-title" style="height:30px; overflow:hidden;">
+						<a class="button-square button-jump-top js-jump-top" title="В начало" href="#"><i class="fa fa-angle-up"></i></a>
+					</h1>
+				</div>
+
+				<p class="footer-copyright">
+					Федор Русак © 2016 / <a href="https://github.com/roryg/ghostwriter">Ghostwriter тема</a> от <a href="http://jollygoodthemes.com/">JollyGoodThemes</a>
+				</p>
+			</div>
+		</footer>
+
+	</body>
+</html>
