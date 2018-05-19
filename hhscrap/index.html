@@ -88,7 +88,7 @@ n.selectPoints=t("./select"),n.moduleType="trace",n.name="scattergeo",n.basePlot
 e.calcdata.columnDragInProgress=!1,_(r,e,0),b(t,n,n.columns.map(function(t){return t.xIndex}))})),c.each(function(e){U.setClipUrl(N.select(this),i(t,e))});var h=c.selectAll("."+j.cn.columnBlock).data(Y.splitToPanels,B.keyFun);h.enter().append("g").classed(j.cn.columnBlock,!0).attr("id",function(t){return t.key}),h.style("cursor",function(t){return t.dragHandle?"ew-resize":t.calcdata.scrollbarState.barWiggleRoom?"ns-resize":"default"});var f=h.filter(M),d=h.filter(w);d.call(N.behavior.drag().origin(function(t){return N.event.stopPropagation(),t}).on("drag",S(t,l,-1)).on("dragend",function(){})),s(t,l,f,h),s(t,l,d,h);var p=l.selectAll("."+j.cn.scrollAreaClip).data(B.repeat,B.keyFun);p.enter().append("clipPath").classed(j.cn.scrollAreaClip,!0).attr("id",function(e){return n(t,e)});var m=p.selectAll("."+j.cn.scrollAreaClipRect).data(B.repeat,B.keyFun);m.enter().append("rect").classed(j.cn.scrollAreaClipRect,!0).attr("x",-j.overdrag).attr("y",-j.uplift).attr("fill","none"),m.attr("width",function(t){return t.width+2*j.overdrag}).attr("height",function(t){return t.height+j.uplift}),c.selectAll("."+j.cn.columnBoundary).data(B.repeat,B.keyFun).enter().append("g").classed(j.cn.columnBoundary,!0);var g=c.selectAll("."+j.cn.columnBoundaryClippath).data(B.repeat,B.keyFun);g.enter().append("clipPath").classed(j.cn.columnBoundaryClippath,!0),g.attr("id",function(e){return i(t,e)});var v=g.selectAll("."+j.cn.columnBoundaryRect).data(B.repeat,B.keyFun);v.enter().append("rect").classed(j.cn.columnBoundaryRect,!0).attr("fill","none"),v.attr("width",function(t){return t.columnWidth}).attr("height",function(t){return t.calcdata.height+j.uplift}),T(null,d,l)}},{"../../components/color":604,"../../components/drawing":628,"../../lib":728,"../../lib/gup":725,"../../lib/svg_text_utils":750,"./constants":1108,"./data_preparation_helper":1109,"./data_split_helpers":1110,d3:122}],1114:[function(t,e,r){"use strict";function n(t,e,r,n){if(n.enabled){for(var a=n.target,o=u.nestedProperty(e,a),s=o.get(),c=l.getDataConversions(t,e,a,s),h=i(n,c),f=new Array(r.length),d=0;d<r.length;d++)f[d]=h(s,r[d]);o.set(f)}}function i(t,e){var r=t.func,n=e.d2c,i=e.c2d;switch(r){case"count":return a;case"first":return o;case"last":return s;case"sum":return function(t,e){for(var r=0,a=0;a<e.length;a++){var o=n(t[e[a]]);o!==h&&(r+=o)}return i(r)};case"avg":return function(t,e){for(var r=0,a=0,o=0;o<e.length;o++){var s=n(t[e[o]]);s!==h&&(r+=s,a++)}return a?i(r/a):h};case"min":return function(t,e){for(var r=1/0,a=0;a<e.length;a++){var o=n(t[e[a]]);o!==h&&(r=Math.min(r,o))}return r===1/0?h:i(r)};case"max":return function(t,e){for(var r=-1/0,a=0;a<e.length;a++){var o=n(t[e[a]]);o!==h&&(r=Math.max(r,o))}return r===-1/0?h:i(r)};case"median":return function(t,e){for(var r=[],a=0;a<e.length;a++){var o=n(t[e[a]]);o!==h&&r.push(o)}if(!r.length)return h;r.sort();var s=(r.length-1)/2;return i((r[Math.floor(s)]+r[Math.ceil(s)])/2)};case"mode":return function(t,e){for(var r={},a=0,o=h,s=0;s<e.length;s++){var l=n(t[e[s]]);if(l!==h){var u=r[l]=(r[l]||0)+1;u>a&&(a=u,o=l)}}return a?i(o):h};case"rms":return function(t,e){for(var r=0,a=0,o=0;o<e.length;o++){var s=n(t[e[o]]);s!==h&&(r+=s*s,a++)}return a?i(Math.sqrt(r/a)):h};case"stddev":return function(e,r){var i,a=0,o=0,s=1,l=h;for(i=0;i<r.length&&l===h;i++)l=n(e[r[i]]);if(l===h)return h;for(;i<r.length;i++){var u=n(e[r[i]]);if(u!==h){var c=u-l;a+=c,o+=c*c,s++}}var f="sample"===t.funcmode?s-1:s;return f?Math.sqrt((o-a*a/s)/f):0}}}function a(t,e){return e.length}function o(t,e){return t[e[0]]}function s(t,e){return t[e[e.length-1]]}var l=t("../plots/cartesian/axes"),u=t("../lib"),c=t("../plot_api/plot_schema"),h=t("../constants/numerical").BADNUM;r.moduleType="transform",r.name="aggregate";var f=r.attributes={enabled:{valType:"boolean",dflt:!0,editType:"calc"},groups:{valType:"string",strict:!0,noBlank:!0,arrayOk:!0,dflt:"x",editType:"calc"},aggregations:{_isLinkedToArray:"aggregation",target:{valType:"string",editType:"calc"},func:{valType:"enumerated",values:["count","sum","avg","median","mode","rms","stddev","min","max","first","last"],dflt:"first",editType:"calc"},funcmode:{valType:"enumerated",values:["sample","population"],dflt:"sample",editType:"calc"},enabled:{valType:"boolean",dflt:!0,editType:"calc"},editType:"calc"},editType:"calc"},d=f.aggregations;r.supplyDefaults=function(t,e){function r(e,r){return u.coerce(t,a,f,e,r)}function n(t,e){return u.coerce(p[i],h,d,t,e)}var i,a={};if(!r("enabled"))return a;var o=c.findArrayAttributes(e),s={};for(i=0;i<o.length;i++)s[o[i]]=1;var l=r("groups");if(!Array.isArray(l)){if(!s[l])return void(a.enabled=!1);s[l]=0}var h,p=t.aggregations||[],m=a.aggregations=new Array(p.length);for(i=0;i<p.length;i++){h={_index:i};var g=n("target"),v=n("func");n("enabled")&&g&&(s[g]||"count"===v&&void 0===s[g])?("stddev"===v&&n("funcmode"),s[g]=0,m[i]=h):m[i]={enabled:!1,_index:i}}for(i=0;i<o.length;i++)s[o[i]]&&m.push({target:o[i],func:d.func.dflt,enabled:!0,_index:-1});return a},r.calcTransform=function(t,e,r){if(r.enabled){var i=r.groups,a=u.getTargetArray(e,{target:i});if(a){var o,s,l,c={},h=[];for(o=0;o<a.length;o++)s=a[o],l=c[s],void 0===l?(c[s]=h.length,h.push([o])):h[l].push(o);var f=r.aggregations;for(o=0;o<f.length;o++)n(t,e,h,f[o]);"string"==typeof i&&n(t,e,h,{target:i,func:"first",enabled:!0})}}}},{"../constants/numerical":707,"../lib":728,"../plot_api/plot_schema":761,"../plots/cartesian/axes":772}],1115:[function(t,e,r){"use strict";function n(t,e,r){function n(t){return-1!==t.indexOf(a)}var i,a=t.operation,o=t.value,c=Array.isArray(o),h=function(r){return e(r,0,t.valuecalendar)},f=function(t){return e(t,0,r)};switch(n(s)?i=h(c?o[0]:o):n(l)?i=c?[h(o[0]),h(o[1])]:[h(o),h(o)]:n(u)&&(i=c?o.map(h):[h(o)]),a){case"=":return function(t){return f(t)===i};case"!=":return function(t){return f(t)!==i};case"<":return function(t){return f(t)<i};case"<=":return function(t){return f(t)<=i};case">":return function(t){return f(t)>i};case">=":return function(t){return f(t)>=i};case"[]":return function(t){var e=f(t);return e>=i[0]&&e<=i[1]};case"()":return function(t){var e=f(t);return e>i[0]&&e<i[1]};case"[)":return function(t){var e=f(t);return e>=i[0]&&e<i[1]};case"(]":return function(t){var e=f(t);return e>i[0]&&e<=i[1]};case"][":return function(t){var e=f(t);return e<=i[0]||e>=i[1]};case")(":return function(t){var e=f(t);return e<i[0]||e>i[1]};case"](":return function(t){var e=f(t);return e<=i[0]||e>i[1]};case")[":return function(t){var e=f(t);return e<i[0]||e>=i[1]};case"{}":return function(t){return-1!==i.indexOf(f(t))};case"}{":return function(t){return-1===i.indexOf(f(t))}}}var i=t("../lib"),a=t("../registry"),o=t("../plots/cartesian/axes"),s=["=","!=","<",">=",">","<="],l=["[]","()","[)","(]","][",")(","](",")["],u=["{}","}{"];r.moduleType="transform",r.name="filter",r.attributes={enabled:{valType:"boolean",dflt:!0,editType:"calc"},target:{valType:"string",strict:!0,noBlank:!0,arrayOk:!0,dflt:"x",editType:"calc"},operation:{valType:"enumerated",values:[].concat(s).concat(l).concat(u),dflt:"=",editType:"calc"},value:{valType:"any",dflt:0,editType:"calc"},preservegaps:{valType:"boolean",dflt:!1,editType:"calc"},editType:"calc"},r.supplyDefaults=function(t){function e(e,a){return i.coerce(t,n,r.attributes,e,a)}var n={};if(e("enabled")){e("preservegaps"),e("operation"),e("value"),e("target");var o=a.getComponentMethod("calendars","handleDefaults");o(t,n,"valuecalendar",null),o(t,n,"targetcalendar",null)}return n},r.calcTransform=function(t,e,r){function a(t,r){for(var n=0;n<h.length;n++){t(i.nestedProperty(e,h[n]),r)}}if(r.enabled){var s=i.getTargetArray(e,r);if(s){var l=r.target,u=s.length,c=r.targetcalendar,h=e._arrayAttrs;if("string"==typeof l){var f=i.nestedProperty(e,l+"calendar").get();f&&(c=f)}var d,p,m=o.getDataToCoordFunc(t,e,l,s),g=n(r,m,c),v={};r.preservegaps?(d=function(t){v[t.astr]=i.extendDeep([],t.get()),t.set(new Array(u))},p=function(t,e){var r=v[t.astr][e];t.get()[e]=r}):(d=function(t){v[t.astr]=i.extendDeep([],t.get()),t.set([])},p=function(t,e){var r=v[t.astr][e];t.get().push(r)}),a(d);for(var y=0;y<u;y++){g(s[y])&&a(p,y)}}}}},{"../lib":728,"../plots/cartesian/axes":772,"../registry":846}],1116:[function(t,e,r){"use strict";function n(t,e){var r,n,s,l,u,c,h,f,d,p,m=e.transform,g=t.transforms[e.transformIndex].groups;if(!Array.isArray(g)||0===g.length)return[t];var v=i.filterUnique(g),y=new Array(v.length),b=g.length,x=a.findArrayAttributes(t),_=m.styles||[],w={};for(r=0;r<_.length;r++)w[_[r].target]=_[r].value;m.styles&&(p=i.keyedContainer(m,"styles","target","value.name"));var M={};for(r=0;r<v.length;r++){c=v[r],M[c]=r,h=y[r]=i.extendDeepNoArrays({},t),h._group=c;var k=null;for(p&&(k=p.get(c)),h.name=k||i.templateString(m.nameformat,{trace:t.name,group:c}),f=h.transforms,h.transforms=[],n=0;n<f.length;n++)h.transforms[n]=i.extendDeepNoArrays({},f[n]);for(n=0;n<x.length;n++)i.nestedProperty(h,x[n]).set([])}for(s=0;s<x.length;s++){for(l=x[s],n=0,d=[];n<v.length;n++)d[n]=i.nestedProperty(y[n],l).get();for(u=i.nestedProperty(t,l).get(),n=0;n<b;n++)d[M[g[n]]].push(u[n])}for(r=0;r<v.length;r++)c=v[r],h=y[r],o.clearExpandedTraceDefaultColors(h),h=i.extendDeepNoArrays(h,w[c]||{});return y}var i=t("../lib"),a=t("../plot_api/plot_schema"),o=t("../plots/plots");r.moduleType="transform",r.name="groupby",r.attributes={enabled:{valType:"boolean",dflt:!0,editType:"calc"},groups:{valType:"data_array",dflt:[],editType:"calc"},nameformat:{valType:"string",editType:"calc"},styles:{_isLinkedToArray:"style",target:{valType:"string",editType:"calc"},value:{valType:"any",dflt:{},editType:"calc"},editType:"calc"},editType:"calc"},r.supplyDefaults=function(t,e,n){function a(e,n){return i.coerce(t,s,r.attributes,e,n)}var o,s={};if(!a("enabled"))return s;a("groups"),a("nameformat",n._dataLength>1?"%{group} (%{trace})":"%{group}");var l=t.styles,u=s.styles=[];if(l)for(o=0;o<l.length;o++)u[o]={},i.coerce(l[o],u[o],r.attributes.styles,"target"),i.coerce(l[o],u[o],r.attributes.styles,"value");return s},r.transform=function(t,e){var r,i,a,o=[];for(i=0;i<t.length;i++)for(r=n(t[i],e),a=0;a<r.length;a++)o.push(r[a]);return o}},{"../lib":728,"../plot_api/plot_schema":761,"../plots/plots":831}],1117:[function(t,e,r){"use strict";function n(t,e,r){for(var n=e.length,a=new Array(n),o=e.slice().sort(i(t,r)),s=0;s<n;s++)for(var l=e[s],u=0;u<n;u++){var c=o[u];if(l===c){a[u]=s,o[u]=null;break}}return a}function i(t,e){switch(t.order){case"ascending":return function(t,r){return e(t)-e(r)};case"descending":return function(t,r){return e(r)-e(t)}}}var a=t("../lib"),o=t("../plots/cartesian/axes");r.moduleType="transform",r.name="sort",r.attributes={enabled:{valType:"boolean",dflt:!0,editType:"calc"},target:{valType:"string",strict:!0,noBlank:!0,arrayOk:!0,dflt:"x",editType:"calc"},order:{valType:"enumerated",values:["ascending","descending"],dflt:"ascending",editType:"calc"},editType:"calc"},r.supplyDefaults=function(t){function e(e,i){return a.coerce(t,n,r.attributes,e,i)}var n={};return e("enabled")&&(e("target"),e("order")),n},r.calcTransform=function(t,e,r){if(r.enabled){var i=a.getTargetArray(e,r);if(i)for(var s=r.target,l=i.length,u=e._arrayAttrs,c=o.getDataToCoordFunc(t,e,s,i),h=n(r,i,c),f=0;f<u.length;f++){for(var d=a.nestedProperty(e,u[f]),p=d.get(),m=new Array(l),g=0;g<l;g++)m[g]=p[h[g]];d.set(m)}}}},{"../lib":728,"../plots/cartesian/axes":772}]},{},[20])(20)});
     </script>
     <script>
-      var showData = function(data) {
+      var showData = function(data, minVacancyCount, maxVacancyCount) {
         var startDate = new Date();
         console.log(startDate);
         var dateArray = [];
@@ -113,6 +113,9 @@ e.calcdata.columnDragInProgress=!1,_(r,e,0),b(t,n,n.columns.map(function(t){retu
 
           var offset = 0;
 
+          var firstVacancyCount = companyData.datasetArray[0].base.length;
+          var statistics = {"minVacancyCount": firstVacancyCount, "maxVacancyCount": firstVacancyCount};
+
           for (var  j = 0; j < companyData.datasetArray.length; j++) {
             var dataset = companyData.datasetArray[j];
 
@@ -129,7 +132,16 @@ e.calcdata.columnDragInProgress=!1,_(r,e,0),b(t,n,n.columns.map(function(t){retu
                 currentVacancyCount -= dataset.remove.length;
               }
 
+
               new_z_data.push(currentVacancyCount);
+
+              if (statistics.minVacancyCount > currentVacancyCount) {
+              	statistics.minVacancyCount = currentVacancyCount;
+              }
+
+              if (statistic.maxVacancyCount < currentVacancyCount) {
+              	statistic.maxVacancyCount = currentVacancyCount;
+              }
             }
             else {
               //company has not yet posted any vacancy
@@ -147,8 +159,10 @@ e.calcdata.columnDragInProgress=!1,_(r,e,0),b(t,n,n.columns.map(function(t){retu
             continue allcompanies;
           }
 
-          companyNameArray.push(companyData.name);
-          z_data.push(new_z_data);
+          if (statistics.minVacancyCount >= minVacancyCount && statistics.maxVacancyCount <= maxVacancyCount) {
+	          companyNameArray.push(companyData.name);
+	          z_data.push(new_z_data);
+	      }
         }
 
         console.log(new Date() - startDate);
@@ -254,13 +268,38 @@ e.calcdata.columnDragInProgress=!1,_(r,e,0),b(t,n,n.columns.map(function(t){retu
         // makeRequest("GET","https://api.hh.ru/vacancies?text=java&area=2&per_page=100&page=1").then(function(data) {alert(JSON.stringify(data))}).catch(function(e) {console.log(e);});
       };
 
+      var parsePositiveInt = function(value, defaultValue) {
+      	defaultValue = defaultValue || 0;
+
+      	var parsed = parseInt(value, 10);
+		if (isNaN(parsed) === false && parsed >= 0) {
+		  return parsed;
+		}
+		
+		return defaultValue;
+      }
       window.onload = function() {
+      	var urlString = window.location.href;
+		var url = new URL(urlString);
+		var minVacancyCount = url.searchParams.get("minVacancyCount");
+		minVacancyCount = parsePositiveInt(minVacancyCount);
+
+		var maxVacancyCount = url.searchParams.get("maxVacancyCount");
+		maxVacancyCount = parsePositiveInt(maxVacancyCount, 100);
+
+		if (maxVacancyCount < minVacancyCount) {
+			maxVacancyCount = minVacancyCount;
+		}
+
+		console.log(minVacancyCount);
+		console.log(maxVacancyCount);
+
         var xhr = new XMLHttpRequest();
         xhr.open("GET", "https://www.fedor-rusak.ru/result.json");
 
         xhr.onload = function () {
           if (this.status == 200)
-            showData(JSON.parse(xhr.response));
+            showData(JSON.parse(xhr.response), minVacancyCount, maxVacancyCount);
           else
             alert("Can't get data for visualization");
         };
