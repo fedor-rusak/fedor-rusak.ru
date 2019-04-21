@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html class=" " lang="ru">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+		<title>Веб-проект для души | %PAGE_HEADER%</title>
+		<meta name="description" content="">
+
+		<meta name="HandheldFriendly" content="True">
+		<meta name="MobileOptimized" content="320">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<link rel="shortcut icon" href="resources/favicon.ico">
+
+		<link rel="stylesheet" type="text/css" href="resources/normalize.css">
+		<link rel="stylesheet" type="text/css" href="resources/nprogress.css">
+		<link rel="stylesheet" type="text/css" href="resources/style.css">
+		<link rel="stylesheet" type="text/css" href="resources/css.css">
+		<link rel="stylesheet" type="text/css" href="resources/font-awesome.css">
+
+		<script type="text/javascript" src="resources/hyphenator.js"></script>
+	</head>
+
+	<body class="home-template">
+
+		<div id="wrapper">
+			<header class="site-header">
+				<div class="container">
+					<div class="site-title-wrapper">
+						<h1 class="site-title">
+							<a class="js-ajax-link" title="К последней записке" href="latest.html">Веб-проект для души</a>
+						</h1>
+						<a class="button-square js-ajax-link js-show-index" title="Содержание" href="content.html"><i class="fa fa-bars"></i></a>
+					</div>
+				</div>
+			</header>
+		
+			<div id="ajax-container" style="display: block;">
+				
+			<div id="latest-post" class="container" style="display: block;">
+			<article class="post-container post">
+				<header class="post-header">
+					<h1 class="post-title donthyphenate">%PAGE_HEADER%</h1>
+
+					<p class="post-date"><time datetime="%PAGE_DATE%">%PAGE_DATE_STRING%</time></p>
+				</header>
+
+				<div class="post-content clearfix hyphenate" style="text-align: justify">
+					
+%CONTENT%
+
+				</div>
+
+				<footer class="post-footer clearfix">
+				</footer>
+			</article>
+			</div>
+
+		</div>
+	</div>
+
+		<footer class="footer">
+			<div class="container">
+				<div class="site-title-wrapper">
+					<h1 class="site-title" style="height:30px; overflow:hidden;">
+						<a class="js-ajax-link" title="К последней записке" href="latest.html">Веб-проект для души</a>
+					</h1>
+					<h1 class="site-title" style="height:30px; overflow:hidden;">
+						<a class="button-square button-jump-top js-jump-top" title="В начало" href="#"><i class="fa fa-angle-up"></i></a>
+					</h1>
+				</div>
+
+				<p class="footer-copyright">
+					Федор Русак © 2019 / <a href="https://github.com/roryg/ghostwriter">Ghostwriter тема</a> от <a href="http://jollygoodthemes.com/">JollyGoodThemes</a>
+				</p>
+			</div>
+		</footer>
+
+	</body>
+</html>

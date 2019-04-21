@@ -1,0 +1,6 @@
+<li class="post-stub post" >
+	<a href="%PAGE_NAME%.html">
+		<h4 class="post-stub-title">%PAGE_HEADER%</h4>
+		<time class="post-stub-date" datetime="%PAGE_DATE%">%PAGE_DATE_STRING%</time>
+	</a>
+</li>
