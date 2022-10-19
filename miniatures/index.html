@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+		<!-- Basic Page Needs
+		–––––––––––––––––––––––––––––––––––––––––––––––––– -->
+		<meta charset="utf-8">
+		<title>Учет материалов для раскраски миниатюр</title>
+		<meta name="description" content="">
+		<meta name="author" content="">
+
+		<!-- Mobile Specific Metas
+		–––––––––––––––––––––––––––––––––––––––––––––––––– -->
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+		<!-- FONT
+		–––––––––––––––––––––––––––––––––––––––––––––––––– -->
+		<link href="../resources/font.css" rel="stylesheet" type="text/css">
+
+		<!-- CSS
+		–––––––––––––––––––––––––––––––––––––––––––––––––– -->
+		<link rel="stylesheet" href="../resources/normalize.css">
+		<link rel="stylesheet" href="../resources/skeleton.css">
+		<link rel="stylesheet" href="../resources/custom.css">
+		<style>
+			input, button {
+				font-family: "OpenSans","HelveticaNeue","Helvetica Neue",Helvetica,Arial,sans-serif;
+			}
+			.bookshelf {
+				margin: 0;
+			}
+			.bookshelf > li {
+				margin: 0;
+			}
+			.book-spine {
+				font-family: Tahoma, Geneva, sans-serif;
+				display: block;
+				list-style-type: none;
+				padding: 30px;
+				font-size: 25px;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+				box-shadow: inset 0px 8px 18px -8px rgba(0,0,0,0.25), inset 0px -8px 18px -8px rgba(255,255,255,0.25);
+				text-shadow: 0px 0px 5px lightgrey;
+				color: #222;
+				text-decoration: none;
+				text-align: left;
+			}
+			.book-spine:hover {
+				text-shadow: 0px 0px 5px white;
+				color: #22a;
+			}
+			.technology-color {
+				background-color: #ffffff;
+			}
+			.programming-color {
+				background-color: lightblue;
+			}
+			.science-color {
+				background-color: #c6d166;
+			}
+			@media (min-width: 750px) {
+				.book-spine {
+					font-size: 40px;
+				}
+			}
+			@media (min-width: 550px) {
+				.book-spine {
+					font-size: 30px;
+				}
+			}
+		</style>
+	</head>
+	<body>
+
+		<div class="container" id="search">
+			<div style="margin-top: 30px;">
+				<form style="margin-bottom: 0px;" action="index.html" method="get">
+					<div class="row" style="text-align: center;" >
+						<input id="searchQuery" class="u-full-width" placeholder="Слова для поиска" type="text">
+						<input id="searchButton" class="button-primary" value="искать" type="submit" style="margin-top:10px;">
+					</div>
+				</form>
+			</div>
+
+			<div style="margin-top: 30px">
+				<div class="row" style="text-align: center;">
+					<ul class="bookshelf" style="list-style: none;" id="list">
+						<li>Краска Citadel Base: Iron Hands Steel (metallic grey)</li>
+						<li>Краска Citadel Base: Rhinox Hide (dark brown)</li>
+						<li>Краска Citadel Base: Zandri dust (sand grey yellow)</li>
+						<li>Краска Citadel Base: Runelord Brass (metallic grey brown)</li>
+						<li>Краска Citadel Base: Balthasar Gold (metallic light brown)</li>
+						<li>Краска Citadel Base: Averland Sunset (deep yellow)</li>
+						<li>Краска Citadel Base: Retributor Armour (metallic gold)</li>
+						<li>Краска Citadel Base: Macragge Blue (deep blue)</li>
+						<li>Краска Citadel Base: Corax White (white)</li>
+						<li>Краска Citadel Base: Abaddon Black (black)</li>
+						<li>Краска Citadel Layer: Stormhost Silver (metallic silver grey)</li>
+						<li>Краска Citadel Layer: Baharroth Blue (light blue)</li>
+						<li>Краска Citadel Layer: Evil Sunz Scarlet (grey red)</li>
+						<li>Краска Citadel Shade: Agrax Earthshade (light brown)</li>
+						<li>Краска Citadel Technical: Astrogranite Debris (textured grey)</li>
+						<li>Краска Citadel Technical: Astrogranite (less textured grey)</li>
+						<li>Краска Vallejo 70.891 Intermediate Green</li>
+						<li>Краска Vallejo 70.910 Orange Red</li>
+						<li>Краска Vallejo 70.927 Dark Flesh</li>
+						<li>Краска Vallejo 70.940 Saddle Brown</li>
+						<li>Краска Vallejo 70.950 Black</li>
+						<li>Краска Vallejo 70.951 White</li>
+						<li>Краска Vallejo 70.963 Medium Blue</li>
+						<li>Краска Vallejo 70.997 Silver</li>
+						<li>Краска Vallejo Game Wash 73.201 Lavado Negro (Black wash)</li>
+						<li>Краска Vallejo Game Wash 73.203 Lavado Sombra (Brown wash)</li>
+						<li>Краска Vallejo Game Wash 73.205 Lavado Verde (Green wash)</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div id="article">
+		</div>
+	</body>
+</html>
